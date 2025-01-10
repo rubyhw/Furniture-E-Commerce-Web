@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Furniture Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="js/auth.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Furniture Store</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="cart.html" class="active">Cart</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="cart">
+            <h2>Shopping Cart</h2>
+            <div class="cart-items">
+                <div class="cart-item">
+                    <img src="https://via.placeholder.com/100" alt="Modern Sofa">
+                    <div class="item-details">
+                        <h3>Modern Sofa</h3>
+                        <p class="price">RM 4,499.99</p>
+                    </div>
+                    <div class="item-quantity">
+                        <button class="quantity-btn">-</button>
+                        <input type="number" value="1" min="1">
+                        <button class="quantity-btn">+</button>
+                    </div>
+                    <button class="remove-btn">Remove</button>
+                </div>
+                <div class="cart-item">
+                    <img src="https://via.placeholder.com/100" alt="Coffee Table">
+                    <div class="item-details">
+                        <h3>Coffee Table</h3>
+                        <p class="price">RM 899.99</p>
+                    </div>
+                    <div class="item-quantity">
+                        <button class="quantity-btn">-</button>
+                        <input type="number" value="1" min="1">
+                        <button class="quantity-btn">+</button>
+                    </div>
+                    <button class="remove-btn">Remove</button>
+                </div>
+            </div>
+            <div class="cart-summary">
+                <div class="subtotal">
+                    <span>Subtotal:</span>
+                    <span>RM 5,399.98</span>
+                </div>
+                <div class="shipping">
+                    <span>Shipping:</span>
+                    <span>RM 100.00</span>
+                </div>
+                <div class="total">
+                    <span>Total:</span>
+                    <span>RM 5,499.98</span>
+                </div>
+                <button class="checkout-btn">Proceed to Checkout</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Furniture Store</p>
+    </footer>
+</body>
+</html>

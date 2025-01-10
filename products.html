@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Furniture Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="js/auth.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Furniture Store</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html" class="active">Products</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="products-header">
+            <h2>Our Products</h2>
+            <div class="filters">
+                <select name="category">
+                    <option value="">All Categories</option>
+                    <option value="living">Living Room</option>
+                    <option value="dining">Dining Room</option>
+                    <option value="bedroom">Bedroom</option>
+                </select>
+                <select name="sort">
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="name">Name</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/200" alt="Modern Sofa">
+                <h3>Modern Sofa</h3>
+                <p class="price">RM 4,499.99</p>
+                <button>Add to Cart</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200" alt="Dining Table">
+                <h3>Dining Table</h3>
+                <p class="price">RM 2,699.99</p>
+                <button>Add to Cart</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200" alt="Bed Frame">
+                <h3>Bed Frame</h3>
+                <p class="price">RM 3,599.99</p>
+                <button>Add to Cart</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200" alt="Coffee Table">
+                <h3>Coffee Table</h3>
+                <p class="price">RM 899.99</p>
+                <button>Add to Cart</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200" alt="Bookshelf">
+                <h3>Bookshelf</h3>
+                <p class="price">RM 1,299.99</p>
+                <button>Add to Cart</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200" alt="Wardrobe">
+                <h3>Wardrobe</h3>
+                <p class="price">RM 2,999.99</p>
+                <button>Add to Cart</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Furniture Store</p>
+    </footer>
+</body>
+</html>
