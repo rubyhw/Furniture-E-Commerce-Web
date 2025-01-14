@@ -4,6 +4,7 @@ const App = () => {
     const [currentPage, setCurrentPage] = React.useState('home');
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState(null);
+    const [selectedProductId, setSelectedProductId] = React.useState(null);
 
     React.useEffect(() => {
         let mounted = true;
@@ -53,7 +54,19 @@ const App = () => {
             case 'home':
                 return <HomePage />;
             case 'products':
-                return <ProductsPage products={products} setCart={setCart} />;
+                return <ProductsPage 
+                    products={products} 
+                    setCart={setCart} 
+                    setCurrentPage={setCurrentPage}
+                    setSelectedProductId={setSelectedProductId}
+                />;
+            case 'product-detail':
+                return <ProductDetailPage 
+                    products={products}
+                    setCart={setCart}
+                    productId={selectedProductId}
+                    setCurrentPage={setCurrentPage}
+                />;
             case 'cart':
                 return <CartPage cart={cart} />;
             case 'orders':

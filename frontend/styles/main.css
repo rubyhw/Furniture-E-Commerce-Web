@@ -1,9 +1,12 @@
 /* General Styles */
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: Georgia, serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: #2d3436;
+    background-color: #f8f9fa;
+    line-height: 1.6;
 }
 
 .app {
@@ -14,40 +17,112 @@ body {
 
 /* Navigation */
 .navbar {
-    background-color: #333;
-    padding: 1rem;
-    color: white;
+    background-color: white;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.75rem;
+    font-weight: normal;
+    color: #2d3436;
+    letter-spacing: -0.5px;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 2rem;
+    gap: 3rem;
     margin: 0;
     padding: 0;
 }
 
 .nav-links a {
-    color: white;
+    color: #2d3436;
     text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.2s;
 }
 
 .nav-links a:hover {
-    color: #ddd;
+    color: #636e72;
 }
 
 /* Main Content */
-.main-content {
+main {
     flex: 1;
-    padding: 2rem;
-    max-width: 1200px;
+    padding: 3rem 2rem;
+    max-width: 1400px;
     margin: 0 auto;
     width: 100%;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: Georgia, serif;
+    font-weight: normal;
+    color: #2d3436;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Buttons */
+button {
+    font-family: Georgia, serif;
+    letter-spacing: 0.5px;
+}
+
+/* Messages */
+.error-message {
+    background: #fff3f3;
+    color: #c0392b;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    text-align: center;
+    border: 1px solid #ffd8d8;
+}
+
+.success-message {
+    background: #f0fff4;
+    color: #27ae60;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    text-align: center;
+    border: 1px solid #d4f5e2;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #636e72;
+    font-style: italic;
+}
+
+/* Forms */
+input, textarea, select {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #2d3436;
 }
 
 /* Products Grid */
@@ -112,23 +187,6 @@ body {
 
 .checkout-button:hover {
     background-color: #218838;
-}
-
-/* Form Styles */
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
 }
 
 /* Order Page Styles */

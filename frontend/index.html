@@ -8,6 +8,201 @@
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
+            padding: 2rem;
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            flex-grow: 1;
+        }
+
+        .product-info h3 {
+            margin: 0;
+            color: #2d3436;
+            font-size: 1.5rem;
+            font-weight: normal;
+            letter-spacing: -0.5px;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            color: #2d3436;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .stock {
+            color: #636e72;
+            font-size: 1rem;
+            margin: 0;
+            font-style: italic;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 1rem;
+            background: white;
+            color: #2d3436;
+            border: 1px solid #2d3436;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: auto;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .add-to-cart-btn:hover:not(:disabled) {
+            background: #2d3436;
+            color: white;
+        }
+
+        .add-to-cart-btn:disabled {
+            background: #f8f9fa;
+            border-color: #e9ecef;
+            color: #636e72;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #fff3f3;
+            color: #c0392b;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            text-align: center;
+            border: 1px solid #ffd8d8;
+        }
+
+        .success-message {
+            background: #f0fff4;
+            color: #27ae60;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            text-align: center;
+            border: 1px solid #d4f5e2;
+        }
+
+        /* Product Detail Page Styles */
+        .product-detail-page {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            margin-bottom: 3rem;
+        }
+
+        .back-button button {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: 1px solid #2d3436;
+            color: #2d3436;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .back-button button:hover {
+            background: #2d3436;
+            color: white;
+        }
+
+        .product-detail-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin: 0 auto;
+        }
+
+        .product-detail-container .product-image {
+            height: 500px;
+            border-radius: 8px;
+        }
+
+        .product-detail-container .product-info {
+            padding: 0;
+        }
+
+        .product-detail-container h1 {
+            margin: 0 0 1rem;
+            color: #2d3436;
+            font-size: 2.5rem;
+            text-align: left;
+            letter-spacing: -0.5px;
+        }
+
+        .product-detail-container .category {
+            color: #636e72;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .product-detail-container .description {
+            color: #2d3436;
+            margin: 2rem 0;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .product-detail-container .product-image {
+                height: 350px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
@@ -15,6 +210,7 @@
     <!-- Page Components -->
     <script type="text/babel" src="components/pages/HomePage.js"></script>
     <script type="text/babel" src="components/pages/ProductsPage.js"></script>
+    <script type="text/babel" src="components/pages/ProductDetailPage.js"></script>
     <script type="text/babel" src="components/pages/CartPage.js"></script>
     <script type="text/babel" src="components/pages/OrderPage.js"></script>
     <script type="text/babel" src="components/pages/LoginPage.js"></script>
