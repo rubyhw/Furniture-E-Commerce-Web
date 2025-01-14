@@ -126,15 +126,6 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
                             </select>
                         </div>
                     </div>
-
-                    {selectedCategory !== 'all' && (
-                        <div className="active-filters">
-                            <span className="filter-tag">
-                                {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
-                                <span className="remove" onClick={() => setSelectedCategory('all')}>×</span>
-                            </span>
-                        </div>
-                    )}
                 </div>
             </div>
 
