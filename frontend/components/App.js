@@ -1,13 +1,54 @@
 const App = () => {
-    const [products, setProducts] = React.useState([
-        { id: 1, name: 'Modern Sofa', price: 999.99 },
-        { id: 2, name: 'Dining Table', price: 599.99 },
-        { id: 3, name: 'Bed Frame', price: 799.99 }
-    ]);
+    const [products, setProducts] = React.useState([]);
     const [cart, setCart] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState('home');
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState(null);
+
+    React.useEffect(() => {
+        let mounted = true;
+        
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('/api/products');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                if (mounted) {
+                    if (Array.isArray(data.products)) {
+                        setProducts(data.products);
+                    } else {
+                        setError('Invalid data format received');
+                    }
+                    setLoading(false);
+                }
+            } catch (err) {
+                console.error('Error fetching products:', err);
+                if (mounted) {
+                    setError(err.message);
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchProducts();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     const renderPage = () => {
+        if (loading) {
+            return <div className="loading">Loading products...</div>;
+        }
+
+        if (error) {
+            return <div className="error">Error: {error}</div>;
+        }
+
         switch(currentPage) {
             case 'home':
                 return <HomePage />;
@@ -22,7 +63,7 @@ const App = () => {
             case 'signup':
                 return <SignupPage setCurrentPage={setCurrentPage} />;
             case 'admin-products':
-                return <AdminProductsPage />;
+                return <AdminProductsPage products={products} setProducts={setProducts} />;
             case 'admin-orders':
                 return <AdminOrdersPage />;
             default:
@@ -85,11 +126,9 @@ const App = () => {
                     </li>
                 </ul>
             </nav>
-            
             <main className="main-content">
                 {renderPage()}
             </main>
-
             <footer className="footer">
                 <p>&copy; 2025 Furniture Store. All rights reserved.</p>
             </footer>
@@ -101,4 +140,7 @@ const App = () => {
 window.App = App;
 
 // Initialize the app
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+    React.createElement(App),
+    document.getElementById('root')
+);

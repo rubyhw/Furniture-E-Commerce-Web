@@ -1,11 +1,48 @@
-window.AdminProductsPage = function AdminProductsPage() {
-    const [products, setProducts] = React.useState([
-        { id: 1, name: 'Modern Sofa', price: 999.99 },
-        { id: 2, name: 'Dining Table', price: 599.99 },
-        { id: 3, name: 'Bed Frame', price: 799.99 }
-    ]);
+window.AdminProductsPage = function AdminProductsPage({ products, setProducts }) {
     const [editingProduct, setEditingProduct] = React.useState(null);
     const [newProduct, setNewProduct] = React.useState({ name: '', price: '' });
+
+    console.log('AdminProductsPage - received products:', products);
+
+    // Fetch products when component mounts
+    React.useEffect(() => {
+        let mounted = true;
+        
+        const fetchProducts = async () => {
+            try {
+                console.log('Fetching products...');
+                const response = await fetch('/api/products');
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products');
+                }
+                
+                const data = await response.json();
+                console.log('Received data:', data);
+                
+                if (mounted) {
+                    if (Array.isArray(data.products)) {
+                        setProducts(data.products);
+                        console.log('Products set:', data.products);
+                    } else {
+                        console.error('Products is not an array:', data);
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching products:', err);
+                if (mounted) {
+                    console.error(err.message);
+                }
+            }
+        };
+
+        fetchProducts();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     const handleEdit = (product) => {
         setEditingProduct({ ...product });
@@ -13,25 +50,28 @@ window.AdminProductsPage = function AdminProductsPage() {
 
     const handleSave = () => {
         if (editingProduct) {
-            setProducts(products.map(p => 
-                p.id === editingProduct.id ? editingProduct : p
-            ));
+            setProducts(currentProducts => 
+                currentProducts.map(p => p.id === editingProduct.id ? editingProduct : p)
+            );
             setEditingProduct(null);
         }
     };
 
     const handleAdd = () => {
         if (newProduct.name && newProduct.price) {
-            setProducts([...products, {
-                id: products.length + 1,
-                ...newProduct
+            const newId = Math.max(...products.map(p => p.id), 0) + 1;
+            setProducts(currentProducts => [...currentProducts, {
+                id: newId,
+                ...newProduct,
+                category: 'Uncategorized',
+                description: ''
             }]);
             setNewProduct({ name: '', price: '' });
         }
     };
 
     const handleDelete = (productId) => {
-        setProducts(products.filter(p => p.id !== productId));
+        setProducts(currentProducts => currentProducts.filter(p => p.id !== productId));
     };
 
     return (
@@ -58,7 +98,7 @@ window.AdminProductsPage = function AdminProductsPage() {
             </div>
 
             <div className="products-list">
-                <h2>Current Products</h2>
+                <h2>Current Products ({products.length})</h2>
                 {products.map(product => (
                     <div key={product.id} className="product-item">
                         {editingProduct && editingProduct.id === product.id ? (
@@ -86,6 +126,7 @@ window.AdminProductsPage = function AdminProductsPage() {
                                 <div className="product-info">
                                     <span className="product-name">{product.name}</span>
                                     <span className="product-price">RM{product.price}</span>
+                                    <span className="product-category">{product.category}</span>
                                 </div>
                                 <div className="product-actions">
                                     <button onClick={() => handleEdit(product)}>Edit</button>
