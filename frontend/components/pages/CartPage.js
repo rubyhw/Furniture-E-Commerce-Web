@@ -1,4 +1,6 @@
 const CartPage = ({ cart = [] }) => {
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    
     return (
         <div className="cart-page">
             <h1>Shopping Cart</h1>
@@ -6,13 +8,19 @@ const CartPage = ({ cart = [] }) => {
                 {cart.length === 0 ? (
                     <p>Your cart is empty</p>
                 ) : (
-                    <div className="cart-list">
-                        {cart.map((item, index) => (
-                            <div key={index} className="cart-item">
-                                <h3>{item.name}</h3>
-                                <p>${item.price}</p>
-                            </div>
-                        ))}
+                    <div>
+                        <div className="cart-list">
+                            {cart.map((item, index) => (
+                                <div key={index} className="cart-item">
+                                    <h3>{item.name}</h3>
+                                    <p>RM{item.price}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="cart-summary">
+                            <h3>Total: RM{total.toFixed(2)}</h3>
+                            <button className="checkout-button">Proceed to Checkout</button>
+                        </div>
                     </div>
                 )}
             </div>

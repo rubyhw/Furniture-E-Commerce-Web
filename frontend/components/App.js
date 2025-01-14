@@ -15,10 +15,16 @@ const App = () => {
                 return <ProductsPage products={products} setCart={setCart} />;
             case 'cart':
                 return <CartPage cart={cart} />;
+            case 'orders':
+                return <OrderPage />;
             case 'login':
                 return <LoginPage setCurrentPage={setCurrentPage} />;
             case 'signup':
                 return <SignupPage setCurrentPage={setCurrentPage} />;
+            case 'admin-products':
+                return <AdminProductsPage />;
+            case 'admin-orders':
+                return <AdminOrdersPage />;
             default:
                 return <HomePage />;
         }
@@ -50,6 +56,12 @@ const App = () => {
                     <li>
                         <a href="#" onClick={(e) => {
                             e.preventDefault();
+                            setCurrentPage('orders');
+                        }}>Orders</a>
+                    </li>
+                    <li>
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault();
                             setCurrentPage('login');
                         }}>Login</a>
                     </li>
@@ -58,6 +70,18 @@ const App = () => {
                             e.preventDefault();
                             setCurrentPage('signup');
                         }}>Sign Up</a>
+                    </li>
+                    <li>
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage('admin-products');
+                        }}>Admin Products</a>
+                    </li>
+                    <li>
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage('admin-orders');
+                        }}>Admin Orders</a>
                     </li>
                 </ul>
             </nav>
