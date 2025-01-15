@@ -5,8 +5,17 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
     const [selectedCategory, setSelectedCategory] = React.useState('all');
     const [searchQuery, setSearchQuery] = React.useState('');
 
-    // Get unique categories from products
-    const categories = ['all', ...new Set(products.map(p => p.category))].sort();
+    // Get unique categories from products and sort them with "all" first and "others" last
+    const categories = React.useMemo(() => {
+        const uniqueCategories = [...new Set(products.map(p => p.category))];
+        return [
+            'all',
+            ...uniqueCategories
+                .filter(cat => cat !== 'others')
+                .sort(),
+            ...(uniqueCategories.includes('others') ? ['others'] : [])
+        ];
+    }, [products]);
 
     // Filter and sort products
     const filteredAndSortedProducts = React.useMemo(() => {

@@ -8,14 +8,14 @@ const App = () => {
 
     React.useEffect(() => {
         let mounted = true;
-        
+
         const fetchProducts = async () => {
             try {
                 const response = await fetch('/api/products');
                 if (!response.ok) {
                     throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
                 }
-                
+
                 const data = await response.json();
                 if (mounted) {
                     if (Array.isArray(data.products)) {
@@ -52,16 +52,16 @@ const App = () => {
 
         switch(currentPage) {
             case 'home':
-                return <HomePage />;
+                return <HomePage setCurrentPage={setCurrentPage} />;
             case 'products':
-                return <ProductsPage 
-                    products={products} 
-                    setCart={setCart} 
+                return <ProductsPage
+                    products={products}
+                    setCart={setCart}
                     setCurrentPage={setCurrentPage}
                     setSelectedProductId={setSelectedProductId}
                 />;
             case 'product-detail':
-                return <ProductDetailPage 
+                return <ProductDetailPage
                     products={products}
                     setCart={setCart}
                     productId={selectedProductId}
@@ -80,7 +80,7 @@ const App = () => {
             case 'admin-orders':
                 return <AdminOrdersPage />;
             default:
-                return <HomePage />;
+                return <HomePage setCurrentPage={setCurrentPage} />;
         }
     };
 
