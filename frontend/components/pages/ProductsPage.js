@@ -20,19 +20,19 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
     // Filter and sort products
     const filteredAndSortedProducts = React.useMemo(() => {
         let result = [...products];
-        
+
         // Apply search filter
         if (searchQuery) {
-            result = result.filter(p => 
+            result = result.filter(p =>
                 p.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
-        
+
         // Apply category filter
         if (selectedCategory !== 'all') {
             result = result.filter(p => p.category === selectedCategory);
         }
-        
+
         // Apply sorting
         switch (sortBy) {
             case 'name-asc':
@@ -48,7 +48,7 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
                 result.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
                 break;
         }
-        
+
         return result;
     }, [products, sortBy, selectedCategory, searchQuery]);
 
@@ -95,7 +95,7 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
                 <div className="products-header">
                     <h1>Our Products</h1>
                 </div>
-                
+
                 <div className="controls-row">
                     <div className="search-box">
                         <input
@@ -105,17 +105,17 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    
+
                     <div className="filter-sort-controls">
                         <div className="control-group">
                             <label className="control-label">Category</label>
-                            <select 
-                                value={selectedCategory} 
+                            <select
+                                value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
                             >
                                 {categories.map(category => (
                                     <option key={category} value={category}>
-                                        {category === 'all' ? 'All Categories' : 
+                                        {category === 'all' ? 'All Categories' :
                                          category.charAt(0).toUpperCase() + category.slice(1)}
                                     </option>
                                 ))}
@@ -124,8 +124,8 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
 
                         <div className="control-group">
                             <label className="control-label">Sort By</label>
-                            <select 
-                                value={sortBy} 
+                            <select
+                                value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
                             >
                                 <option value="name-asc">Name (A-Z)</option>
@@ -139,14 +139,14 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
             </div>
 
             {error && <div className="error-message">{error}</div>}
-            
+
             <div className="products-grid">
                 {filteredAndSortedProducts.length === 0 ? (
                     <p className="no-products">No products found</p>
                 ) : (
                     filteredAndSortedProducts.map(product => (
-                        <div 
-                            key={product.id} 
+                        <div
+                            key={product.id}
                             className="product-card"
                             onClick={() => viewProductDetail(product.id)}
                         >
@@ -157,7 +157,7 @@ window.ProductsPage = ({ products = [], setCart, setCurrentPage, setSelectedProd
                                 <h3>{product.name}</h3>
                                 <p className="price">RM {product.price}</p>
                                 <p className="stock">In Stock: {product.stock_count}</p>
-                                <button 
+                                <button
                                     className="add-to-cart-btn"
                                     onClick={(e) => addToCart(product, e)}
                                     disabled={loading || product.stock_count < 1}
