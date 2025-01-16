@@ -4,15 +4,15 @@ window.HomePage = ({ setCurrentPage }) => {
 
     const slides = [
         {
-            image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc',
+            image: 'https://deborainteriors.com/wp-content/uploads/2023/04/white-living-room-vintage.png',
             text: 'Modern Living Room Collections'
         },
         {
-            image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457',
+            image: 'https://www.home-designing.com/wp-content/uploads/2016/11/natural-minimalist-bedroom.jpg',
             text: 'Elegant Bedroom Designs'
         },
         {
-            image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36',
+            image: 'https://static.vecteezy.com/system/resources/previews/040/286/256/non_2x/ai-generated-a-minimalist-home-office-with-a-simple-desk-ergonomic-chair-free-photo.jpeg',
             text: 'Stylish Office Furniture'
         }
     ];
@@ -56,7 +56,6 @@ window.HomePage = ({ setCurrentPage }) => {
                     ))}
                     <div className={`slide-content ${fadeIn ? 'fade-in' : ''}`}>
                         <h1>{slides[currentSlide].text}</h1>
-                        <p>Discover our curated collection of premium furniture</p>
                         <button className="cta-button" onClick={navigateToProducts}>Shop Now</button>
                     </div>
                 </div>
