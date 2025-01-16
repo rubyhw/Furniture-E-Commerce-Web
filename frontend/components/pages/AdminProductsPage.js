@@ -5,7 +5,8 @@ window.AdminProductsPage = function AdminProductsPage({ products, setProducts })
         price: '',
         category: '',
         stock_count: '',
-        image: null
+        image: null,
+        image_url: null
     });
 
     const categories = React.useMemo(() => {
@@ -30,25 +31,14 @@ window.AdminProductsPage = function AdminProductsPage({ products, setProducts })
     const handleSave = async () => {
         if (editingProduct) {
             try {
-                const response = await fetch(`/api/products/${editingProduct.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(editingProduct)
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to update product');
-                }
-
+                const updatedProduct = await window.productService.updateProduct(editingProduct.id, editingProduct, products);
                 setProducts(currentProducts =>
-                    currentProducts.map(p => p.id === editingProduct.id ? editingProduct : p)
+                    currentProducts.map(p => p.id === editingProduct.id ? updatedProduct : p)
                 );
                 setEditingProduct(null);
             } catch (error) {
                 console.error('Error updating product:', error);
-                alert('Failed to update product. Please try again.');
+                alert(error.message || 'Failed to update product. Please try again.');
             }
         }
     };
@@ -56,58 +46,11 @@ window.AdminProductsPage = function AdminProductsPage({ products, setProducts })
     const handleAdd = async () => {
         if (newProduct.name && newProduct.price) {
             try {
-                // Create a new FormData instance
-                const formData = new FormData();
-
-                // Add basic product data
-                const productData = {
-                    name: newProduct.name.trim(),
-                    price: parseFloat(newProduct.price),
-                    category: (newProduct.category || 'others').trim(),
-                    stock_count: parseInt(newProduct.stock_count) || 0,
-                    image: null  // Will be updated by the server
-                };
-
-                console.log('Sending product data:', productData); // Debug log
-
-                // Add the image file if it exists
-                if (newProduct.image) {
-                    formData.append('image', newProduct.image);
-                }
-
-                // Add the product data as a JSON string
-                formData.append('product', JSON.stringify(productData));
-
-                const response = await fetch('/api/products', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.text();
-                    console.error('Server error:', errorData);
-                    throw new Error('Failed to add product');
-                }
-
-                const result = await response.json();
-                console.log('Server response:', result); // Debug log
-
-                // Check if we got a valid product back
-                if (!result.product || !result.product.id) {
-                    throw new Error('Invalid product data received from server');
-                }
-
-                // Ensure numeric fields are properly typed
-                const validatedProduct = {
-                    ...result.product,
-                    price: parseFloat(result.product.price) || 0,
-                    stock_count: parseInt(result.product.stock_count) || 0
-                };
-
-                console.log('Validated product:', validatedProduct); // Debug log
+                const addedProduct = await window.productService.addProduct(newProduct, newProduct.image, products);
+                console.log('Added product:', addedProduct);
 
                 // Add the new product to the list
-                setProducts(currentProducts => [...currentProducts, validatedProduct]);
+                setProducts(currentProducts => [...currentProducts, addedProduct]);
 
                 // Reset the form
                 setNewProduct({
@@ -115,14 +58,14 @@ window.AdminProductsPage = function AdminProductsPage({ products, setProducts })
                     price: '',
                     category: '',
                     stock_count: 0,
-                    image: null
+                    image: null,
+                    image_url: null
                 });
 
-                // Show success message
                 alert('Product added successfully!');
             } catch (error) {
                 console.error('Error adding product:', error);
-                alert('Failed to add product. Please try again.');
+                alert(error.message || 'Failed to add product. Please try again.');
             }
         } else {
             alert('Please enter at least a product name and price');
@@ -132,18 +75,11 @@ window.AdminProductsPage = function AdminProductsPage({ products, setProducts })
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                const response = await fetch(`/api/products/${productId}`, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to delete product');
-                }
-
+                await window.productService.deleteProduct(productId, products);
                 setProducts(currentProducts => currentProducts.filter(p => p.id !== productId));
             } catch (error) {
                 console.error('Error deleting product:', error);
-                alert('Failed to delete product. Please try again.');
+                alert(error.message || 'Failed to delete product. Please try again.');
             }
         }
     };
