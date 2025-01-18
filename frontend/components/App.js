@@ -79,8 +79,10 @@ const App = () => {
                 return <AdminProductsPage products={products} setProducts={setProducts} />;
             case 'admin-orders':
                 return <AdminOrdersPage />;
+            case 'about':
+                return <AboutUsPage setCurrentPage={setCurrentPage} />;
             default:
-                return <HomePage setCurrentPage={setCurrentPage} />;
+                return <HomePage />;
         }
     };
 
@@ -136,6 +138,12 @@ const App = () => {
                             e.preventDefault();
                             setCurrentPage('admin-orders');
                         }}>Admin Orders</a>
+                    </li>
+                    <li>
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage('about');
+                        }}>About Us</a>
                     </li>
                 </ul>
             </nav>
