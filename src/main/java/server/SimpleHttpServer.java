@@ -4,22 +4,104 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import server.SimpleHttpServer.LoginHandler;
+import server.SimpleHttpServer.ProductHandler;
+import server.SimpleHttpServer.StaticFileHandler;
+import server.SimpleHttpServer.StockHandler;
+
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.file.Files;
+import java.nio.file.Files; 
 import java.util.List;
+import java.util.Scanner;
+
 
 public class SimpleHttpServer {
     private HttpServer server;
 
     public void start() throws IOException {
         server = HttpServer.create(new InetSocketAddress(8080), 0);
+        server.createContext("/api/login", new LoginHandler());
         server.createContext("/api/products", new ProductHandler());
         server.createContext("/api/stock", new StockHandler());
         server.createContext("/", new StaticFileHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Server started successfully! Access the website at http://localhost:8080");
+    }
+
+    static class LoginHandler implements HttpHandler{
+        @Override
+        public void handle(HttpExchange exchange) throws IOException{
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+
+            try{
+                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    // Read request body
+                    InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder requestBody = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        requestBody.append(line);
+                    }
+
+                    String body = requestBody.toString().trim();
+                    System.out.println(body);
+                    body = body.substring(1, body.length()-1);
+                    String[] parts = body.split(",");
+                    String email = parts[0].split(":")[1];
+                    String password = parts[1].split(":")[1];
+                    email = email.substring(1, email.length()-1);
+                    password = password.substring(1, password.length()-1);
+
+                    String currentDir = System.getProperty("user.dir");
+                    String csvPath = currentDir + "/data/users.csv";
+                    File csvFile = new File(csvPath);
+                    if (!csvFile.exists() || !csvFile.canRead()) {
+                        throw new IOException("Cannot access CSV file at: " + csvPath);
+                    }
+                    try (Scanner reader = new Scanner(csvFile)) {
+                        while(reader.hasNextLine()){
+                            String record = reader.nextLine();
+                            String[] userInformation = record.split(",");
+                            if(userInformation[1].equals(email) && userInformation[3].equals(password)){
+                                StringBuilder jsonBuilder = new StringBuilder();
+                                jsonBuilder.append("{\"id\":\"" + userInformation[0] + "\",\"email\":\"" + userInformation[1] + "\",\"name\":\"" + userInformation[2] + "\",\"admin\":\"" + userInformation[4] + "\"}");
+                                String userCredentials = jsonBuilder.toString();
+                                System.err.println(userCredentials);
+                                exchange.getResponseHeaders().set("Content-Type", "application/json");
+                                exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+                                byte[] responseBytes = userCredentials.getBytes("UTF-8");
+                                exchange.sendResponseHeaders(200, responseBytes.length);
+                                try (OutputStream os = exchange.getResponseBody()) {
+                                    os.write(responseBytes);
+                                }
+                            }
+                        }
+                    } catch (FileNotFoundException err){
+                        System.err.println("scanner failed");
+                    }
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+                String response = "{\"error\":\"" + e.getMessage() + "\"}";
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
+                exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+                byte[] responseBytes = response.getBytes("UTF-8");
+                exchange.sendResponseHeaders(500, responseBytes.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(responseBytes);
+                }
+            }
+        }
     }
 
     static class ProductHandler implements HttpHandler {
