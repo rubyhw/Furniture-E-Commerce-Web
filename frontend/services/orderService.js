@@ -2,7 +2,8 @@ const orderService = {
   async handleCheckout({
     userId,
     cart,
-    total
+    total,
+    setCart
   }) {
     try {
       console.log(userId);
@@ -21,6 +22,11 @@ const orderService = {
         const data = await response.json();
         console.log(data.error);
         throw new Error(data.error);
+      }
+
+      // Clear the cart after successful checkout
+      if (setCart) {
+        setCart([]);
       }
     } catch (err) {
       throw err;
@@ -43,6 +49,7 @@ const orderService = {
         const data = await response.json();
         return data;
       } else{
+        const data = await response.json();
         console.log(data.error);
         throw new Error(data.error);
       }

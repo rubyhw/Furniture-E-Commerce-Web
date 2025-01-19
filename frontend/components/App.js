@@ -9,6 +9,7 @@ const App = () => {
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [userId, setUserId] = React.useState("");
   const [userName, setUserName] = React.useState("");
+  const [orderCount, setOrderCount] = React.useState(0);
 
   React.useEffect(() => {
     let mounted = true;
@@ -78,9 +79,9 @@ const App = () => {
           />
         );
       case "cart":
-        return <CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} />;
+        return <CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} setCart={setCart} />;
       case "orders":
-        return <OrderPage userId={userId} />;
+        return <OrderPage userId={userId} setOrderCount={setOrderCount} />;
       case "login":
         return (
           <LoginPage
@@ -172,7 +173,7 @@ const App = () => {
                         setCurrentPage("orders");
                       }}
                     >
-                      Orders
+                      Orders ({orderCount})
                     </a>
                   </li>
                 </React.Fragment>
