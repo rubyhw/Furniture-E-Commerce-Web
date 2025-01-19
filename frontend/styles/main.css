@@ -149,7 +149,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .product-card button {
-    background-color: #007bff;
+    background-color: #000000;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -158,7 +158,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .product-card button:hover {
-    background-color: #0056b3;
+    background-color: #333333;
 }
 
 /* Cart Styles */
