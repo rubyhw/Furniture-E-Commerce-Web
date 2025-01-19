@@ -6,8 +6,6 @@ const orderService = {
     setCart
   }) {
     try {
-      console.log(userId);
-      console.log(cart);
       const productIdArr = cart.map(item => item.id);
       console.log(JSON.stringify({ userId, productIdArr, total }));
       const response = await fetch("/api/checkout", {

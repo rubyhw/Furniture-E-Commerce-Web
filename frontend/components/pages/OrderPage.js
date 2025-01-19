@@ -43,7 +43,7 @@ window.OrderPage = ({ userId, setOrderCount }) => {
                                 {order.items.map(item => (
                                     <div key={item.id} className="order-item">
                                         <span>{item.name} x{item.quantity}</span>
-                                        <span>RM{item.price * item.quantity}</span>
+                                        <span>RM{(item.price * item.quantity).toFixed(2)}</span>
                                     </div>
                                 ))}
                             </div>

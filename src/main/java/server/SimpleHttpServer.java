@@ -69,8 +69,8 @@ public class SimpleHttpServer {
                         requestBody.append(line);
                     }
 
+                    // Get email and password from request body
                     String body = requestBody.toString().trim();
-                    System.out.println(body);
                     body = body.substring(1, body.length()-1);
                     String[] parts = body.split(",");
                     String email = parts[0].split(":")[1];
@@ -85,6 +85,7 @@ public class SimpleHttpServer {
                         throw new IOException("Cannot access CSV file at: " + csvPath);
                     }
                     try (Scanner reader = new Scanner(csvFile)) {
+                        // Check if there is a matching email and password
                         while(reader.hasNextLine()){
                             String record = reader.nextLine();
                             String[] userInformation = record.split(",");
@@ -427,9 +428,7 @@ public class SimpleHttpServer {
 
                     // Seperate json string into attributes
                     String body = requestBody.toString().trim();
-                    System.out.println(body);
                     body = body.substring(1, body.length()-1);
-                    System.out.println(body);
                     String[] parts = body.split(",\"");
                     String userId = parts[0].split(":")[1];
                     String productIDs = parts[1].split(":")[1];
