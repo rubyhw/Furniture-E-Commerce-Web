@@ -124,7 +124,7 @@ const App = () => {
   return (
     <div className="app">
       <nav className="navbar">
-        <div className="nav-brand">Furniture Store</div>
+        <div className="nav-brand">Furniture Haven</div>
         <ul className="nav-links">
           <li>
             <a
@@ -246,7 +246,7 @@ const App = () => {
       </nav>
       <main className="main-content">{renderPage()}</main>
       <footer className="footer">
-        <p>&copy; 2025 Furniture Store. All rights reserved.</p>
+        <p>&copy; 2025 Furniture Haven. All rights reserved.</p>
       </footer>
     </div>
   );
