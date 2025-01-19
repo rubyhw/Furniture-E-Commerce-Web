@@ -92,15 +92,27 @@ const App = () => {
           />
         );
       case "signup":
-        return <SignupPage setCurrentPage={setCurrentPage} />;
-      case "admin-products":
         return (
+          <SignupPage
+            setCurrentPage={setCurrentPage}
+            setIsAuthenticated={setIsAuthenticated}
+            setIsAdmin={setIsAdmin}
+            setUserId={setUserId}
+            setUserName={setUserName}
+          />
+        );
+      case "admin-products":
+        return isAdmin ? (
           <AdminProductsPage products={products} setProducts={setProducts} />
+        ) : (
+          <div>Access Denied</div>
         );
       case "admin-orders":
-        return <AdminOrdersPage />;
+        return isAdmin ? <AdminOrdersPage /> : <div>Access Denied</div>;
+      case "about":
+        return <AboutUsPage setCurrentPage={setCurrentPage} />;
       default:
-        return <HomePage setCurrentPage={setCurrentPage} />;
+        return <HomePage />;
     }
   };
 
@@ -142,59 +154,84 @@ const App = () => {
               Cart ({cart.length})
             </a>
           </li>
+          {isAuthenticated && (
+            <li>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage("orders");
+                }}
+              >
+                Orders
+              </a>
+            </li>
+          )}
+          {!isAuthenticated ? (
+            <>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage("login");
+                  }}
+                >
+                  Login
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage("signup");
+                  }}
+                >
+                  Sign Up
+                </a>
+              </li>
+            </>
+          ) : (
+            <li>
+              <span>Welcome, {userName}</span>
+            </li>
+          )}
+          {isAdmin && (
+            <>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage("admin-products");
+                  }}
+                >
+                  Admin Products
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage("admin-orders");
+                  }}
+                >
+                  Admin Orders
+                </a>
+              </li>
+            </>
+          )}
           <li>
             <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setCurrentPage("orders");
+                setCurrentPage("about");
               }}
             >
-              Orders
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("login");
-              }}
-            >
-              Login
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("signup");
-              }}
-            >
-              Sign Up
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("admin-products");
-              }}
-            >
-              Admin Products
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("admin-orders");
-              }}
-            >
-              Admin Orders
+              About Us
             </a>
           </li>
         </ul>
