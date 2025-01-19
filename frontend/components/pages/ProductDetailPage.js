@@ -1,4 +1,4 @@
-window.ProductDetailPage = ({ products = [], setCart, productId, setCurrentPage }) => {
+window.ProductDetailPage = ({ products = [], setCart, productId, setCurrentPage, isAuthenticated }) => {
     const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     
@@ -20,6 +20,8 @@ window.ProductDetailPage = ({ products = [], setCart, productId, setCurrentPage 
         setLoading(true);
 
         try {
+            if(!isAuthenticated)
+                throw new Error('You are not logged in');
             const response = await fetch('/api/stock', {
                 method: 'POST',
                 headers: {

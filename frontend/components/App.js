@@ -76,6 +76,7 @@ const App = () => {
             setCart={setCart}
             productId={selectedProductId}
             setCurrentPage={setCurrentPage}
+            isAuthenticated={isAuthenticated}
           />
         );
       case "cart":
