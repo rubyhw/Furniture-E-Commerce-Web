@@ -21,6 +21,16 @@ const AuthContext = {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        
+        // Set window.userData
+        window.userData = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          admin: data.admin,
+          isAdmin: data.admin === 'TRUE'
+        };
+
         setIsAuthenticated(true);
         setUserId(data.id);
         setUserName(data.name);

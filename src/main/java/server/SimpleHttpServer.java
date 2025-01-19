@@ -1,21 +1,26 @@
-package server;
+package main.java.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.Headers;
 
-import server.SimpleHttpServer.LoginHandler;
-import server.SimpleHttpServer.SignUpHandler;
-import server.SimpleHttpServer.ProductHandler;
-import server.SimpleHttpServer.CheckoutHandler;
-import server.SimpleHttpServer.StaticFileHandler;
-import server.SimpleHttpServer.StockHandler;
-import server.SimpleHttpServer.ManageProductsHandler;
-import server.SimpleHttpServer.OrderHandler;
+import main.java.server.SimpleHttpServer.LoginHandler;
+import main.java.server.SimpleHttpServer.SignUpHandler;
+import main.java.server.SimpleHttpServer.ProductHandler;
+import main.java.server.SimpleHttpServer.CheckoutHandler;
+import main.java.server.SimpleHttpServer.StaticFileHandler;
+import main.java.server.SimpleHttpServer.StockHandler;
+import main.java.server.SimpleHttpServer.ManageProductsHandler;
+import main.java.server.SimpleHttpServer.OrderHandler;
+import main.java.server.SimpleHttpServer.OrderManagementHandler;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +29,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 /**
  * Simple HTTP server that handles requests for the e-commerce application.
@@ -40,6 +48,7 @@ public class SimpleHttpServer {
         server.createContext("/api/checkout", new CheckoutHandler());
         server.createContext("/api/manage-products", new ManageProductsHandler());
         server.createContext("/api/order", new OrderHandler());
+        server.createContext("/api/order-management", new OrderManagementHandler());
         server.createContext("/", new StaticFileHandler());
         server.setExecutor(null);
         server.start();
@@ -49,6 +58,8 @@ public class SimpleHttpServer {
     static class LoginHandler implements HttpHandler{
         @Override
         public void handle(HttpExchange exchange) throws IOException{
+            System.out.println("LoginHandler: Request received"); // Verbose logging
+            
             exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
@@ -58,7 +69,7 @@ public class SimpleHttpServer {
                 return;
             }
 
-            try{
+            try {
                 if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                     // Read request body
                     InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
@@ -70,61 +81,107 @@ public class SimpleHttpServer {
                     }
 
                     String body = requestBody.toString().trim();
-                    System.out.println(body);
-                    body = body.substring(1, body.length()-1);
-                    String[] parts = body.split(",");
-                    String email = parts[0].split(":")[1];
-                    String password = parts[1].split(":")[1];
-                    email = email.substring(1, email.length()-1);
-                    password = password.substring(1, password.length()-1);
+                    System.out.println("LoginHandler: Raw request body: " + body); // Verbose logging
+
+                    // Parse JSON body
+                    JSONObject jsonBody;
+                    try {
+                        jsonBody = new JSONObject(body);
+                    } catch (Exception e) {
+                        System.err.println("LoginHandler: JSON parsing error: " + e.getMessage());
+                        sendErrorResponse(exchange, 400, "Invalid request body");
+                        return;
+                    }
+
+                    // Extract email and password
+                    String email = jsonBody.optString("email");
+                    String password = jsonBody.optString("password");
+
+                    System.out.println("LoginHandler: Attempting login for email: " + email); // Verbose logging
+
+                    if (email.isEmpty() || password.isEmpty()) {
+                        System.err.println("LoginHandler: Missing email or password"); // Verbose logging
+                        sendErrorResponse(exchange, 400, "Email and password are required");
+                        return;
+                    }
 
                     String currentDir = System.getProperty("user.dir");
                     String csvPath = currentDir + "/data/users.csv";
                     File csvFile = new File(csvPath);
+
                     if (!csvFile.exists() || !csvFile.canRead()) {
-                        throw new IOException("Cannot access CSV file at: " + csvPath);
+                        System.err.println("LoginHandler: Cannot access CSV file at: " + csvPath);
+                        sendErrorResponse(exchange, 500, "Server configuration error");
+                        return;
                     }
+
                     try (Scanner reader = new Scanner(csvFile)) {
-                        while(reader.hasNextLine()){
+                        while (reader.hasNextLine()) {
                             String record = reader.nextLine();
                             String[] userInformation = record.split(",");
-                            if(userInformation[1].equals(email) && userInformation[3].equals(password)){
-                                StringBuilder jsonBuilder = new StringBuilder();
-                                jsonBuilder.append("{\"id\":\"" + userInformation[0] + "\",\"email\":\"" + userInformation[1] + "\",\"name\":\"" + userInformation[2] + "\",\"admin\":\"" + userInformation[4] + "\"}");
-                                String userCredentials = jsonBuilder.toString();
-                                System.err.println(userCredentials);
+                            
+                            // Ensure we have enough fields
+                            if (userInformation.length < 5) {
+                                continue;
+                            }
+
+                            // Trim and compare email and password
+                            if (userInformation[1].trim().equals(email.trim()) && 
+                                userInformation[3].trim().equals(password.trim())) {
+                                
+                                JSONObject userResponse = new JSONObject();
+                                userResponse.put("id", userInformation[0]);
+                                userResponse.put("email", userInformation[1]);
+                                userResponse.put("name", userInformation[2]);
+                                userResponse.put("admin", userInformation[4]);
+
+                                System.out.println("LoginHandler: User authenticated successfully: " + email); // Verbose logging
+
+                                // Send successful response
+                                String userCredentials = userResponse.toString();
                                 exchange.getResponseHeaders().set("Content-Type", "application/json");
-                                exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
                                 byte[] responseBytes = userCredentials.getBytes("UTF-8");
                                 exchange.sendResponseHeaders(200, responseBytes.length);
                                 try (OutputStream os = exchange.getResponseBody()) {
                                     os.write(responseBytes);
                                 }
+                                return;
                             }
                         }
-                    } catch (FileNotFoundException err){
-                        System.err.println("scanner failed");
+                    } catch (FileNotFoundException err) {
+                        System.err.println("LoginHandler: Scanner failed to read users file");
+                        sendErrorResponse(exchange, 500, "Internal server error");
+                        return;
                     }
-                    String response = "{\"error\":\"User not found\"}";
-                    exchange.getResponseHeaders().set("Content-Type", "application/json");
-                    byte[] responseBytes = response.getBytes("UTF-8");
-                    exchange.sendResponseHeaders(400, responseBytes.length);
-                    try (OutputStream os = exchange.getResponseBody()) {
-                        os.write(responseBytes);
-                    }
-                } else{
-                    throw new IOException("Method not allowed");
+
+                    // If no user found
+                    System.err.println("LoginHandler: Invalid credentials for email: " + email); // Verbose logging
+                    sendErrorResponse(exchange, 400, "Invalid email or password");
+
+                } else {
+                    System.err.println("LoginHandler: Method not allowed"); // Verbose logging
+                    sendErrorResponse(exchange, 405, "Method not allowed");
                 }
-            }catch(IOException e){
+            } catch (Exception e) {
+                System.err.println("LoginHandler: Unexpected error: " + e.getMessage());
                 e.printStackTrace();
-                String response = "{\"error\":\"" + e.getMessage() + "\"}";
-                exchange.getResponseHeaders().set("Content-Type", "application/json");
-                exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
-                byte[] responseBytes = response.getBytes("UTF-8");
-                exchange.sendResponseHeaders(500, responseBytes.length);
-                try (OutputStream os = exchange.getResponseBody()) {
-                    os.write(responseBytes);
-                }
+                sendErrorResponse(exchange, 500, "Unexpected server error");
+            }
+        }
+
+        // Helper method to send error responses
+        private void sendErrorResponse(HttpExchange exchange, int statusCode, String message) throws IOException {
+            JSONObject errorResponse = new JSONObject();
+            errorResponse.put("error", message);
+
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+            
+            byte[] responseBytes = errorResponse.toString().getBytes("UTF-8");
+            exchange.sendResponseHeaders(statusCode, responseBytes.length);
+            
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBytes);
             }
         }
     }
@@ -309,7 +366,7 @@ public class SimpleHttpServer {
                     while ((line = br.readLine()) != null) {
                         requestBody.append(line);
                     }
-                    
+
                     // Parse productId and quantity
                     String[] parts = requestBody.toString().split("&");
                     int productId = -1;
@@ -616,8 +673,9 @@ public class SimpleHttpServer {
                         throw new IOException("Product not found");
                     }
 
-                    // Write back to file
+                    // Write updated content back to file
                     Files.write(csvFile.toPath(), updatedLines);
+                    
                     exchange.sendResponseHeaders(204, -1);
 
                 } else if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
@@ -643,8 +701,9 @@ public class SimpleHttpServer {
                         throw new IOException("Product not found");
                     }
 
-                    // Write back to file
+                    // Write updated content back to file
                     Files.write(csvFile.toPath(), updatedLines);
+                    
                     exchange.sendResponseHeaders(204, -1);
                 }
             } catch (Exception e) {
@@ -683,81 +742,98 @@ public class SimpleHttpServer {
                         requestBody.append(line);
                     }
 
-                    // Get user id
                     String body = requestBody.toString().trim();
-                    body = body.substring(1, body.length()-1);
-                    String[] parts = body.split(":");
-                    String userId = parts[1];
-                    userId = userId.substring(1, userId.length()-1);
+                    boolean isAdminRequest = false;
+                    String userId = null;
+
+                    try {
+                        JSONObject jsonBody = new JSONObject(body);
+                        if (jsonBody.has("isAdmin")) {
+                            Object adminValue = jsonBody.get("isAdmin");
+                            isAdminRequest = (adminValue instanceof Boolean && (Boolean)adminValue) ||
+                                           (adminValue instanceof String && 
+                                            (adminValue.equals("true") || adminValue.equals("TRUE")));
+                        }
+                        
+                        if (jsonBody.has("userId")) {
+                            userId = jsonBody.getString("userId");
+                        }
+                    } catch (Exception e) {
+                        isAdminRequest = body.contains("\"isAdmin\":true") || 
+                                       body.contains("\"isAdmin\":\"true\"") || 
+                                       body.contains("\"isAdmin\":\"TRUE\"") ||
+                                       body.contains("isAdmin=true");
+                    }
                     
                     String currentDir = System.getProperty("user.dir");
                     String csvPath = currentDir + "/data/orders.csv";
-                    File csvFile = new File(csvPath);
+                    List<String> lines = Files.readAllLines(Paths.get(csvPath));
                     
-                    if (!csvFile.exists() || !csvFile.canRead()) {
-                        throw new IOException("Cannot access CSV file at: " + csvPath);
-                    }
-                    
-                    // Get current user's order history
-                    List<String> lines = Files.readAllLines(csvFile.toPath());
-                    List<String> userOrder = new ArrayList<String>();
-                    for(int i = 0; i < lines.size(); i++){
-                        String[] values = lines.get(i).split(",");
-                        if(values[1].trim().equals(userId)){
-                            userOrder.add(lines.get(i));
+                    JSONObject response = new JSONObject();
+                    JSONArray orderHistory = new JSONArray();
+
+                    for (String currentLine : lines) {
+                        if (currentLine.trim().isEmpty()) {
+                            continue;
+                        }
+
+                        String[] orderData = currentLine.split(",");
+                        if (orderData.length < 5) {
+                            continue;
+                        }
+
+                        if (orderData[0].equalsIgnoreCase("id") || 
+                            orderData[0].equalsIgnoreCase("orderid") || 
+                            orderData[0].equalsIgnoreCase("order_id")) {
+                            continue;
+                        }
+
+                        boolean includeOrder = isAdminRequest || 
+                            (userId != null && orderData[1].equals(userId));
+                        
+                        if (includeOrder) {
+                            try {
+                                // Parse and validate the total amount
+                                String totalStr = orderData[3].trim();
+                                double total;
+                                try {
+                                    total = Double.parseDouble(totalStr);
+                                } catch (NumberFormatException e) {
+                                    System.err.println("Invalid price format: " + totalStr);
+                                    continue;
+                                }
+
+                                JSONObject order = new JSONObject();
+                                order.put("id", orderData[0].trim());
+                                order.put("userId", orderData[1].trim());
+                                order.put("date", orderData[2].trim());
+                                order.put("total", total); // Send as number, not string
+                                order.put("status", orderData[4].trim());
+                                
+                                JSONArray items = new JSONArray();
+                                for (int j = 5; j < orderData.length; j++) {
+                                    items.put(orderData[j].trim());
+                                }
+                                order.put("items", items);
+                                
+                                orderHistory.put(order);
+                            } catch (Exception e) {
+                                System.err.println("Error processing order: " + e.getMessage());
+                                continue;
+                            }
                         }
                     }
-                    System.out.println(userOrder);
 
-                    // Get all lines from products.csv to be used at building JSON string later to get product name and price
-                    String productFilePath = currentDir + "/data/products.csv";
-                    File productFile = new File(productFilePath);
-                    if (!productFile.exists() || !productFile.canRead()) {
-                        throw new IOException("Cannot access CSV file at: " + productFilePath);
-                    }
-                    List<String> products = Files.readAllLines(productFile.toPath());
-
-                    // Build the JSON string
-                    StringBuilder jsonBuilder = new StringBuilder();
-                    jsonBuilder.append("{\"orderHistory\":[");
-                    for(int i = 0; i < userOrder.size(); i++){
-                        if (i > 0) jsonBuilder.append(",");
-                        String[] values = userOrder.get(i).split(",");
-                        jsonBuilder.append("{\"id\":\"").append(values[0]).append("\",");
-                        jsonBuilder.append("\"date\":\"").append(values[2]).append("\",");
-                        jsonBuilder.append("\"items\":[");
-                        System.out.println("test");
-                        for(int j = 5; j < values.length; j++){
-                            // If j is odd, the element from values[j] is a product id
-                            if(j % 2 == 1){
-                                String[] prodAttribute = products.get(Integer.parseInt(values[j])).split(",");
-                                jsonBuilder.append("{\"id\":").append(Integer.parseInt(values[j])).append(",");
-                                jsonBuilder.append("\"name\":\"").append(prodAttribute[1]).append("\",");
-                                jsonBuilder.append("\"price\":").append(Double.parseDouble(prodAttribute[2])).append(",");
-                            }
-                            // If j is even, the element from values[j] is the quantity bought
-                            if(j % 2 == 0){
-                                System.out.println("quantity");
-                                jsonBuilder.append("\"quantity\":").append(Integer.parseInt(values[j])).append("}");
-                                if(j != values.length - 1) jsonBuilder.append(",");
-                            }
-                        }
-                        jsonBuilder.append("],");
-                        jsonBuilder.append("\"status\":\"").append(values[4]).append("\",");
-                        jsonBuilder.append("\"total\":").append(Double.parseDouble(values[3])).append("}");
-                    }
-                    jsonBuilder.append("]}");
-                    String response = jsonBuilder.toString();
+                    response.put("orderHistory", orderHistory);
+                    String responseBody = response.toString();
                     exchange.getResponseHeaders().set("Content-Type", "application/json");
-                    exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
-                    byte[] responseBytes = response.getBytes("UTF-8");
+                    byte[] responseBytes = responseBody.getBytes("UTF-8");
                     exchange.sendResponseHeaders(200, responseBytes.length);
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(responseBytes);
                     }
                 }
-            } catch (Exception e){
-                e.printStackTrace();
+            } catch (Exception e) {
                 String response = "{\"error\":\"" + e.getMessage() + "\"}";
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
@@ -766,6 +842,89 @@ public class SimpleHttpServer {
                 try (OutputStream os = exchange.getResponseBody()) {
                     os.write(responseBytes);
                 }
+            }
+        }
+    }
+
+    static class OrderManagementHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            // Set CORS headers
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Access-Control-Allow-Origin", "*");
+            headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            headers.add("Access-Control-Allow-Headers", "Content-Type");
+
+            // Handle preflight request
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                exchange.close();
+                return;
+            }
+
+            if (!"POST".equals(exchange.getRequestMethod())) {
+                sendResponse(exchange, 405, "Method Not Allowed");
+                return;
+            }
+
+            try {
+                // Read request body
+                InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr);
+                String requestBody = br.lines().collect(Collectors.joining());
+                
+                // Parse JSON
+                JSONObject jsonRequest = new JSONObject(requestBody);
+                int orderId = jsonRequest.getInt("orderId");
+                String newStatus = jsonRequest.getString("status");
+
+                // Update order status in CSV
+                boolean updated = updateOrderStatus(orderId, newStatus);
+
+                if (updated) {
+                    JSONObject response = new JSONObject();
+                    response.put("message", "Order status updated successfully");
+                    sendResponse(exchange, 200, response.toString());
+                } else {
+                    sendResponse(exchange, 404, "Order not found");
+                }
+            } catch (Exception e) {
+                sendResponse(exchange, 500, "Internal Server Error: " + e.getMessage());
+            }
+        }
+
+        private boolean updateOrderStatus(int orderId, String newStatus) {
+            try {
+                Path path = Paths.get("data/orders.csv");
+                List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+                
+                boolean updated = false;
+                for (int i = 0; i < lines.size(); i++) {
+                    String[] parts = lines.get(i).split(",");
+                    if (parts.length > 0 && Integer.parseInt(parts[0]) == orderId) {
+                        // Update status (5th column)
+                        parts[4] = newStatus;
+                        lines.set(i, String.join(",", parts));
+                        updated = true;
+                        break;
+                    }
+                }
+
+                if (updated) {
+                    Files.write(path, lines, StandardCharsets.UTF_8);
+                }
+
+                return updated;
+            } catch (IOException | NumberFormatException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        private void sendResponse(HttpExchange exchange, int code, String response) throws IOException {
+            exchange.sendResponseHeaders(code, response.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
             }
         }
     }

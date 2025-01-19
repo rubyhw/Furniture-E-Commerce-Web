@@ -59,10 +59,10 @@ const App = () => {
 
     switch (currentPage) {
       case "home":
-        return <HomePage setCurrentPage={setCurrentPage} />;
+        return <window.HomePage setCurrentPage={setCurrentPage} />;
       case "products":
         return (
-          <ProductsPage
+          <window.ProductsPage
             products={products}
             setCart={setCart}
             setCurrentPage={setCurrentPage}
@@ -71,7 +71,7 @@ const App = () => {
         );
       case "product-detail":
         return (
-          <ProductDetailPage
+          <window.ProductDetailPage
             products={products}
             setCart={setCart}
             productId={selectedProductId}
@@ -79,12 +79,12 @@ const App = () => {
           />
         );
       case "cart":
-        return <CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} setCart={setCart} />;
+        return <window.CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} setCart={setCart} />;
       case "orders":
-        return <OrderPage userId={userId} setOrderCount={setOrderCount} />;
+        return <window.OrderPage userId={userId} setOrderCount={setOrderCount} />;
       case "login":
         return (
-          <LoginPage
+          <window.LoginPage
             setCurrentPage={setCurrentPage}
             setIsAuthenticated={setIsAuthenticated}
             setIsAdmin={setIsAdmin}
@@ -94,7 +94,7 @@ const App = () => {
         );
       case "signup":
         return (
-          <SignupPage
+          <window.SignupPage
             setCurrentPage={setCurrentPage}
             setIsAuthenticated={setIsAuthenticated}
             setIsAdmin={setIsAdmin}
@@ -103,15 +103,11 @@ const App = () => {
           />
         );
       case "admin-products":
-        return isAdmin ? (
-          <AdminProductsPage products={products} setProducts={setProducts} />
-        ) : (
-          <div>Access Denied</div>
-        );
+        return <window.ManageProductsPage products={products} setProducts={setProducts} />;
       case "admin-orders":
-        return isAdmin ? <AdminOrdersPage /> : <div>Access Denied</div>;
+        return <window.ManageOrdersPage />;
       default:
-        return <HomePage />;
+        return <div>Page not found</div>;
     }
   };
 

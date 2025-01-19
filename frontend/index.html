@@ -9,7 +9,8 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/HomePage.css">
-    <link rel="stylesheet" href="styles/AdminProductsPage.css">
+    <link rel="stylesheet" href="styles/ManageProductsPage.css">
+    <link rel="stylesheet" href="styles/ManageOrdersPage.css">
     <style>
         .products-grid {
             display: grid;
@@ -277,25 +278,29 @@
     <script type="text/babel" src="services/productService.js"></script>
     <script type="text/babel" src="services/AuthContext.js"></script>
     <script type="text/babel" src="services/orderService.js"></script>
+    <script type="text/babel" src="services/userService.js"></script>
 
-    <!-- Page Components -->
+    <!-- Components -->
+    <script type="text/babel" src="components/pages/OrderPage.js"></script>
     <script type="text/babel" src="components/pages/HomePage.js"></script>
     <script type="text/babel" src="components/pages/ProductsPage.js"></script>
     <script type="text/babel" src="components/pages/ProductDetailPage.js"></script>
     <script type="text/babel" src="components/pages/CartPage.js"></script>
-    <script type="text/babel" src="components/pages/OrderPage.js"></script>
     <script type="text/babel" src="components/pages/LoginPage.js"></script>
     <script type="text/babel" src="components/pages/SignupPage.js"></script>
-    <script type="text/babel" src="components/pages/AdminProductsPage.js"></script>
-    <script type="text/babel" src="components/pages/AdminOrdersPage.js"></script>
+    <script type="text/babel" src="components/pages/ManageProductsPage.js"></script>
+    <script type="text/babel" src="components/pages/ManageOrdersPage.js"></script>
 
     <!-- Main App -->
-    <script type="text/babel" src="components/App.js"></script>
     <script type="text/babel">
-        ReactDOM.render(
-            React.createElement(App),
-            document.getElementById('root')
-        );
+        // Wait for all components to load
+        window.addEventListener('load', () => {
+            ReactDOM.render(
+                React.createElement(window.App),
+                document.getElementById('root')
+            );
+        });
     </script>
+    <script type="text/babel" src="components/App.js"></script>
 </body>
 </html>

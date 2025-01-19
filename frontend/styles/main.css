@@ -212,16 +212,32 @@ input:focus, textarea:focus, select:focus {
     margin-bottom: 1rem;
 }
 
+.order-header select {
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.order-header select:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
 .order-status {
     padding: 0.25rem 0.75rem;
     border-radius: 4px;
     font-size: 0.9rem;
+    width: 100px;
+    display: inline-block;
+    text-align: center;
 }
 
-.status-processing { background-color: #ffd700; }
-.status-shipped { background-color: #87ceeb; }
-.status-delivered { background-color: #90ee90; }
-.status-cancelled { background-color: #ffcccb; }
+.status-processing { background-color: #ffd700; color: black; }
+.status-shipped { background-color: #87ceeb; color: black; }
+.status-delivered { background-color: #90ee90; color: black; }
+.status-cancelled { background-color: #ffcccb; color: black; }
 
 .order-date {
     color: #666;

@@ -1,0 +1,142 @@
+.manage-orders-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.manage-orders-page h1 {
+    color: #2d3748;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 1rem;
+}
+
+.orders-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.order-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    background: #f7fafc;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.order-header h3 {
+    color: #2d3748;
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.order-header select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: white;
+    color: #4a5568;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    width: 120px;
+    margin-left: auto;
+    height: 32px;
+}
+
+.order-header select:hover {
+    border-color: #cbd5e0;
+}
+
+.order-header select:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 1px #4299e1;
+}
+
+.order-details {
+    padding: 1.5rem;
+}
+
+.order-details p {
+    margin: 0.5rem 0;
+    color: #4a5568;
+    font-size: 0.875rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.order-details p strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.order-items {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.order-items h4 {
+    color: #2d3748;
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+}
+
+.order-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-items li {
+    padding: 0.75rem;
+    background: #f7fafc;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #4a5568;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-items li:last-child {
+    margin-bottom: 0;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5568;
+    font-size: 1.125rem;
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #e53e3e;
+    background: #fff5f5;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Status colors */
+.status-processing { color: black; }
+.status-shipped { color: black; }
+.status-delivered { color: black; }
+.status-cancelled { color: black; }

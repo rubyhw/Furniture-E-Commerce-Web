@@ -1,4 +1,4 @@
-window.AdminProductsPage = function AdminProductsPage({ products, setProducts }) {
+window.ManageProductsPage = function ManageProductsPage({ products, setProducts }) {
     const [editingProduct, setEditingProduct] = React.useState(null);
     const [newProduct, setNewProduct] = React.useState({
         name: '',
