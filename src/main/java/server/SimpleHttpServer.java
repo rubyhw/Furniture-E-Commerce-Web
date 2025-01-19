@@ -80,6 +80,7 @@ public class SimpleHttpServer {
                         requestBody.append(line);
                     }
 
+                    // Get email and password from request body
                     String body = requestBody.toString().trim();
                     System.out.println("LoginHandler: Raw request body: " + body); // Verbose logging
 
@@ -484,9 +485,7 @@ public class SimpleHttpServer {
 
                     // Seperate json string into attributes
                     String body = requestBody.toString().trim();
-                    System.out.println(body);
                     body = body.substring(1, body.length()-1);
-                    System.out.println(body);
                     String[] parts = body.split(",\"");
                     String userId = parts[0].split(":")[1];
                     String productIDs = parts[1].split(":")[1];
