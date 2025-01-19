@@ -90,7 +90,7 @@ window.ManageProductsPage = function ManageProductsPage({ products, setProducts 
 
             <div className="add-product-form">
                 <h2>Add New Product</h2>
-                <div className="form-group">
+                <div className="admin-form-group">
                     <div className="input-group">
                         <label>Product Name</label>
                         <input
@@ -134,7 +134,7 @@ window.ManageProductsPage = function ManageProductsPage({ products, setProducts 
                     </div>
                     <button className="add-button" onClick={handleAdd}>Add Product</button>
                 </div>
-                <div className="form-group image-upload-group">
+                <div className="admin-form-group image-upload-group">
                     <div className="input-group">
                         <label>Product Image</label>
                         <input
