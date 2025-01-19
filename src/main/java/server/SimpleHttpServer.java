@@ -10,11 +10,13 @@ import server.SimpleHttpServer.ProductHandler;
 import server.SimpleHttpServer.CheckoutHandler;
 import server.SimpleHttpServer.StaticFileHandler;
 import server.SimpleHttpServer.StockHandler;
+import server.SimpleHttpServer.ManageProductsHandler;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,9 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * Simple HTTP server that handles requests for the e-commerce application.
+ */
 public class SimpleHttpServer {
     private HttpServer server;
 
@@ -33,6 +37,7 @@ public class SimpleHttpServer {
         server.createContext("/api/products", new ProductHandler());
         server.createContext("/api/stock", new StockHandler());
         server.createContext("/api/checkout", new CheckoutHandler());
+        server.createContext("/api/manage-products", new ManageProductsHandler());
         server.createContext("/", new StaticFileHandler());
         server.setExecutor(null);
         server.start();
@@ -447,6 +452,33 @@ public class SimpleHttpServer {
                     }
                     List<String> orders = Files.readAllLines(csvFile.toPath());
 
+                    // Update product stock counts
+                    String productsPath = currentDir + "/data/products.csv";
+                    File productsFile = new File(productsPath);
+                    List<String> products = Files.readAllLines(productsFile.toPath());
+                    List<String> updatedProducts = new ArrayList<>();
+                    
+                    // Add header
+                    updatedProducts.add(products.get(0));
+                    
+                    // Update stock counts
+                    for (int i = 1; i < products.size(); i++) {
+                        String[] productData = products.get(i).split(",");
+                        String prodId = productData[0];
+                        if (frequency.containsKey(prodId)) {
+                            int currentStock = Integer.parseInt(productData[5]);
+                            int orderQuantity = frequency.get(prodId);
+                            if (currentStock < orderQuantity) {
+                                throw new IOException("Insufficient stock for product ID: " + prodId);
+                            }
+                            productData[5] = String.valueOf(currentStock - orderQuantity);
+                        }
+                        updatedProducts.add(String.join(",", productData));
+                    }
+                    
+                    // Write updated products back to file
+                    Files.write(productsFile.toPath(), updatedProducts);
+
                     FileWriter fw = new FileWriter(csvFile, true);
                     LocalDate orderDate = LocalDate.now();
                     String status = "Processing";
@@ -468,6 +500,155 @@ public class SimpleHttpServer {
                 String response = "{\"error\":\"" + e.getMessage() + "\"}";
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+                byte[] responseBytes = response.getBytes("UTF-8");
+                exchange.sendResponseHeaders(500, responseBytes.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(responseBytes);
+                }
+            }
+        }
+    }
+
+    static class ManageProductsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+
+            try {
+                String currentDir = System.getProperty("user.dir");
+                String csvPath = currentDir + "/data/products.csv";
+                File csvFile = new File(csvPath);
+                
+                if (!csvFile.exists() || !csvFile.canRead()) {
+                    throw new IOException("Cannot access CSV file at: " + csvPath);
+                }
+
+                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    // Add new product
+                    InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder requestBody = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        requestBody.append(line);
+                    }
+
+                    // Parse product data
+                    String body = requestBody.toString().trim();
+                    body = body.substring(1, body.length()-1);
+                    String[] parts = body.split(",\"");
+                    
+                    // Extract product details
+                    String name = parts[0].split(":")[1].replaceAll("\"", "");
+                    String price = parts[1].split(":")[1].replaceAll("\"", "");
+                    String description = parts[2].split(":")[1].replaceAll("\"", "");
+                    String category = parts[3].split(":")[1].replaceAll("\"", "");
+                    String stockCount = parts[4].split(":")[1].replaceAll("\"", "");
+                    String imageUrl = parts[5].split(":")[1].replaceAll("\"", "");
+
+                    // Read existing products to get next ID
+                    List<String> lines = Files.readAllLines(csvFile.toPath());
+                    int nextId = lines.size(); // Since header is at index 0
+
+                    // Add new product
+                    String newProduct = String.format("\n%d,%s,%s,%s,%s,%s,%s",
+                        nextId, name, price, description, category, stockCount, imageUrl);
+                    
+                    FileWriter fw = new FileWriter(csvFile, true);
+                    fw.append(newProduct);
+                    fw.close();
+
+                    exchange.sendResponseHeaders(204, -1);
+
+                } else if (exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
+                    // Update existing product
+                    InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder requestBody = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        requestBody.append(line);
+                    }
+
+                    // Parse product data
+                    String body = requestBody.toString().trim();
+                    body = body.substring(1, body.length()-1);
+                    String[] parts = body.split(",\"");
+                    
+                    // Extract product details
+                    String id = parts[0].split(":")[1].replaceAll("\"", "");
+                    String name = parts[1].split(":")[1].replaceAll("\"", "");
+                    String price = parts[2].split(":")[1].replaceAll("\"", "");
+                    String description = parts[3].split(":")[1].replaceAll("\"", "");
+                    String category = parts[4].split(":")[1].replaceAll("\"", "");
+                    String stockCount = parts[5].split(":")[1].replaceAll("\"", "");
+                    String imageUrl = parts[6].split(":")[1].replaceAll("\"", "");
+
+                    // Read and update file
+                    List<String> lines = Files.readAllLines(csvFile.toPath());
+                    List<String> updatedLines = new ArrayList<>();
+                    updatedLines.add(lines.get(0)); // Add header
+
+                    boolean found = false;
+                    for (int i = 1; i < lines.size(); i++) {
+                        String[] values = lines.get(i).split(",");
+                        if (values[0].equals(id)) {
+                            // Update product
+                            String updatedProduct = String.format("%s,%s,%s,%s,%s,%s,%s",
+                                id, name, price, description, category, stockCount, imageUrl);
+                            updatedLines.add(updatedProduct);
+                            found = true;
+                        } else {
+                            updatedLines.add(lines.get(i));
+                        }
+                    }
+
+                    if (!found) {
+                        throw new IOException("Product not found");
+                    }
+
+                    // Write back to file
+                    Files.write(csvFile.toPath(), updatedLines);
+                    exchange.sendResponseHeaders(204, -1);
+
+                } else if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
+                    // Delete product
+                    String productId = exchange.getRequestURI().getQuery().split("=")[1];
+
+                    // Read and update file
+                    List<String> lines = Files.readAllLines(csvFile.toPath());
+                    List<String> updatedLines = new ArrayList<>();
+                    updatedLines.add(lines.get(0)); // Add header
+
+                    boolean found = false;
+                    for (int i = 1; i < lines.size(); i++) {
+                        String[] values = lines.get(i).split(",");
+                        if (!values[0].equals(productId)) {
+                            updatedLines.add(lines.get(i));
+                        } else {
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        throw new IOException("Product not found");
+                    }
+
+                    // Write back to file
+                    Files.write(csvFile.toPath(), updatedLines);
+                    exchange.sendResponseHeaders(204, -1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                String response = "{\"error\":\"" + e.getMessage() + "\"}";
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
                 byte[] responseBytes = response.getBytes("UTF-8");
                 exchange.sendResponseHeaders(500, responseBytes.length);
                 try (OutputStream os = exchange.getResponseBody()) {

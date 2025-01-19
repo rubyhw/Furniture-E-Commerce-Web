@@ -7,3 +7,6 @@ id,name,price,description,category,stock_count,image_url
 7,Dining Chair Set,399.99,Set of 4 elegant dining chairs,chair,3,https://images.unsplash.com/photo-1503602642458-232111445657
 8,Study Table,249.99,Compact study table with drawers,table,10,https://images.unsplash.com/photo-1554295405-abb8fd54f153
 10,Storage Wardrobe,699.99,Modern wardrobe with sliding doors,wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2
+11,Leather Sofa,1555.99,Three-seater sofa with an aniline leather that only gets more beautiful over the years,others,2,https://www.ikea.com/my/en/images/products/stockholm-three-seat-sofa-seglora-natural__0212281_pe339545_s5.jpg?f=xl
+12,Black 5-seater Sofa,2200.00,Sofa with resilient foam filling for comfort; thick grain leather  on the contact areas,others,5,https://www.ikea.com/my/en/images/products/landskrona-5-seat-sofa-with-chaise-longues-grann-bomstad-black-wood__0320807_pe514847_s5.jpg?f=xl
+13,Black Corner Sofa,1199.99,A 3-seater sofa which sections can be combined in different ways to get a size and shape that suits you and your home.,others,2,https://www.ikea.com/my/en/images/products/vimle-corner-sofa-3-seat-with-open-end-grann-bomstad-black__0817686_pe774101_s5.jpg?f=xl

@@ -109,11 +109,17 @@ const App = () => {
         );
       case "admin-orders":
         return isAdmin ? <AdminOrdersPage /> : <div>Access Denied</div>;
-      case "about":
-        return <AboutUsPage setCurrentPage={setCurrentPage} />;
       default:
         return <HomePage />;
     }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    setUserId("");
+    setUserName("");
+    setCurrentPage("home");
   };
 
   return (
@@ -143,32 +149,63 @@ const App = () => {
               Products
             </a>
           </li>
-          <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("cart");
-              }}
-            >
-              Cart ({cart.length})
-            </a>
-          </li>
-          {isAuthenticated && (
-            <li>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage("orders");
-                }}
-              >
-                Orders
-              </a>
-            </li>
-          )}
-          {!isAuthenticated ? (
-            <>
+          {isAuthenticated ? (
+            <React.Fragment>
+              {!isAdmin && (
+                <React.Fragment>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage("cart");
+                      }}
+                    >
+                      Cart ({cart.length})
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage("orders");
+                      }}
+                    >
+                      Orders
+                    </a>
+                  </li>
+                </React.Fragment>
+              )}
+              {isAdmin && (
+                <React.Fragment>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage("admin-products");
+                      }}
+                    >
+                      Manage Products
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage("admin-orders");
+                      }}
+                    >
+                      Manage Orders
+                    </a>
+                  </li>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
               <li>
                 <a
                   href="#"
@@ -191,49 +228,21 @@ const App = () => {
                   Sign Up
                 </a>
               </li>
-            </>
-          ) : (
+            </React.Fragment>
+          )}
+          {isAuthenticated && (
             <li>
-              <span>Welcome, {userName}</span>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogout();
+                }}
+              >
+                Logout ({userName})
+              </a>
             </li>
           )}
-          {isAdmin && (
-            <>
-              <li>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage("admin-products");
-                  }}
-                >
-                  Admin Products
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage("admin-orders");
-                  }}
-                >
-                  Admin Orders
-                </a>
-              </li>
-            </>
-          )}
-          <li>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("about");
-              }}
-            >
-              About Us
-            </a>
-          </li>
         </ul>
       </nav>
       <main className="main-content">{renderPage()}</main>

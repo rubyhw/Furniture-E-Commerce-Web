@@ -630,3 +630,128 @@ input:focus, textarea:focus, select:focus {
     padding: 1rem;
     margin-top: auto;
 }
+
+/* Login and Signup Pages */
+.login-page,
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+}
+
+.login-container,
+.signup-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+    transition: all 0.3s ease;
+}
+
+.login-container:hover,
+.signup-container:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.login-container h1,
+.signup-container h1 {
+    text-align: center;
+    color: #2d3436;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    letter-spacing: -1px;
+}
+
+.login-form,
+.signup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2d3436;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2d3436;
+    box-shadow: 0 0 0 2px rgba(45, 52, 54, 0.1);
+}
+
+.login-form button,
+.signup-form button {
+    background-color: #2d3436;
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.login-form button:hover,
+.signup-form button:hover {
+    background-color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-form button:disabled,
+.signup-form button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #d32f2f;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.login-page p,
+.signup-page p {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #636e72;
+}
+
+.login-page a,
+.signup-page a {
+    color: #2d3436;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-page a:hover,
+.signup-page a:hover {
+    color: #000000;
+    text-decoration: underline;
+}
