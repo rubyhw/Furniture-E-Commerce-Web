@@ -80,7 +80,7 @@ const App = () => {
       case "cart":
         return <CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} />;
       case "orders":
-        return <OrderPage cart={cart} />;
+        return <OrderPage userId={userId} />;
       case "login":
         return (
           <LoginPage

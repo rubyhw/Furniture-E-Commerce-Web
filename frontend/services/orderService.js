@@ -27,24 +27,22 @@ const orderService = {
     }
   },
 
-  async handleSignUp({
-    email,
-    password,
-    name
+  async getOrderHistory({
+    userId
   }) {
     try {
-      console.log("submitting form");
-      console.log(JSON.stringify({ email, password, name }));
-      const response = await fetch("/api/signup", {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ userId }),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
         const data = await response.json();
+        return data;
+      } else{
         console.log(data.error);
         throw new Error(data.error);
       }
