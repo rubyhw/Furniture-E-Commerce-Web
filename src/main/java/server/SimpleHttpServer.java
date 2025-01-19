@@ -300,12 +300,35 @@ public class SimpleHttpServer {
                 String[] headers = lines.get(0).split(",");
                 for (int i = 1; i < lines.size(); i++) {
                     if (i > 1) jsonBuilder.append(",");
-                    String[] values = lines.get(i).split(",");
+                    String line = lines.get(i);
+                    // Handle quoted fields that may contain commas
+                    List<String> values = new ArrayList<>();
+                    StringBuilder field = new StringBuilder();
+                    boolean inQuotes = false;
+                    
+                    for (char c : line.toCharArray()) {
+                        if (c == '"') {
+                            inQuotes = !inQuotes;
+                        } else if (c == ',' && !inQuotes) {
+                            values.add(field.toString());
+                            field.setLength(0);
+                        } else {
+                            field.append(c);
+                        }
+                    }
+                    values.add(field.toString());
+                    
                     jsonBuilder.append("{");
-                    for (int j = 0; j < headers.length && j < values.length; j++) {
+                    for (int j = 0; j < headers.length && j < values.size(); j++) {
                         if (j > 0) jsonBuilder.append(",");
                         String header = headers[j].trim();
-                        String value = values[j].trim();
+                        String value = values.get(j).trim()
+                            .replace("\\", "\\\\")
+                            .replace("\"", "\\\"")
+                            .replace("\n", "\\n")
+                            .replace("\r", "\\r")
+                            .replace("\t", "\\t");
+                            
                         jsonBuilder.append("\"").append(header).append("\":");
                         if (header.equals("id") || header.equals("price") || header.equals("stock_count")) {
                             jsonBuilder.append(value);

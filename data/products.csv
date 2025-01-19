@@ -1,12 +1,24 @@
 id,name,price,description,category,stock_count,image_url
-1,Modern Sofa,999.99,A sleek and comfortable modern sofa,others,7,https://images.unsplash.com/photo-1555041469-a586c61ea9bc
-2,Dining Table,599.99,Elegant dining table for 6,table,3,https://images.unsplash.com/photo-1577140917170-285929fb55b7
-3,Queen Bed Frame,799.99,Queen size bed frame with storage,bed,15,https://images.unsplash.com/photo-1505693416388-ac5ce068fe85
-4,Coffee Table,199.99,Modern coffee table with storage shelf,table,6,https://images.unsplash.com/photo-1533090368676-1fd25485db88
-5,Wooden Wardrobe,899.99,Spacious wardrobe with classic design,wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2
-6,Dining Chair Set,399.99,Set of 4 elegant dining chairs,chair,1,https://images.unsplash.com/photo-1503602642458-232111445657
-7,Study Table,249.99,Compact study table with drawers,table,10,https://images.unsplash.com/photo-1554295405-abb8fd54f153
-8,Storage Wardrobe,699.99,Modern wardrobe with sliding doors,wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2
-9,Leather Sofa,1555.99,Three-seater sofa with an aniline leather that only gets more beautiful over the years,others,2,https://www.ikea.com/my/en/images/products/stockholm-three-seat-sofa-seglora-natural__0212281_pe339545_s5.jpg?f=xl
-10,Black 5-seater Sofa,2200.00,Sofa with resilient foam filling for comfort; thick grain leather  on the contact areas,others,1,https://www.ikea.com/my/en/images/products/landskrona-5-seat-sofa-with-chaise-longues-grann-bomstad-black-wood__0320807_pe514847_s5.jpg?f=xl
-11,Black Corner Sofa,1199.99,A 3-seater sofa which sections can be combined in different ways to get a size and shape that suits you and your home.,others,0,https://www.ikea.com/my/en/images/products/vimle-corner-sofa-3-seat-with-open-end-grann-bomstad-black__0817686_pe774101_s5.jpg?f=xl
+1,Modern Fabric Sofa,999.99,"A sleek and comfortable modern sofa",others,7,https://images.unsplash.com/photo-1555041469-a586c61ea9bc
+2,Dining Table,599.99,"Elegant dining table for 6",table,7,https://images.unsplash.com/photo-1577140917170-285929fb55b7
+3,Queen Bed Frame,799.99,"Queen size bed frame with storage",bed,15,https://images.unsplash.com/photo-1505693416388-ac5ce068fe85
+5,Coffee Table,199.99,"Modern coffee table with storage shelf",table,8,https://images.unsplash.com/photo-1533090368676-1fd25485db88
+6,Wooden Wardrobe,899.99,"Spacious wardrobe with classic design",wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2
+7,Dining Chair Set,399.99,"Set of 4 elegant dining chairs",chair,3,https://images.unsplash.com/photo-1503602642458-232111445657
+8,Study Table,249.99,"Compact study table with drawers",table,10,https://images.unsplash.com/photo-1554295405-abb8fd54f153
+10,Storage Wardrobe,699.99,"Modern wardrobe with sliding doors",wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2
+11,Leather Sofa,1555.99,"Three-seater sofa with an aniline leather that only gets more beautiful over the years",others,2,https://www.ikea.com/my/en/images/products/stockholm-three-seat-sofa-seglora-natural__0212281_pe339545_s5.jpg?f=xl
+12,Black 5-seater Sofa,2200.00,"Sofa with resilient foam filling for comfort; thick grain leather on the contact areas",others,5,https://www.ikea.com/my/en/images/products/landskrona-5-seat-sofa-with-chaise-longues-grann-bomstad-black-wood__0320807_pe514847_s5.jpg?f=xl
+13,Black Corner Sofa,1199.99,"A 3-seater sofa which sections can be combined in different ways to get a size and shape that suits you and your home",others,2,https://www.ikea.com/my/en/images/products/vimle-corner-sofa-3-seat-with-open-end-grann-bomstad-black__0817686_pe774101_s5.jpg?f=xl
+14,Dark Grey Wardrobe,925.00,"A wardrobe with adjustable feet that make it possible to compensate any irregularities in the floor and soft-closing mechanism",wardrobe,3,https://www.ikea.com/my/en/images/products/pax-hasvik-wardrobe-dark-grey-dark-grey__1183920_pe897657_s5.jpg?f=xl
+15,Small White Wardrobe,399.99,"A small wardrobe that fits a lot in a small space. Stands steady also on uneven floors since adjustable feet are included",wardrobe,7,https://www.ikea.com/my/en/images/products/smastad-wardrobe-white-white-with-2-clothes-rails__1266837_pe928321_s5.jpg?f=xl
+16,Blue All-in-one Wardrobe,499.99,"An all-in-one compact wardrobe with different storage functions",wardrobe,2,https://www.ikea.com/my/en/images/products/platsa-wardrobe-with-2-doors-2-drawers-white-sannidal-blue__1389852_pe965283_s5.jpg?f=xl
+17,Open Wardrobe,225.00,"An open wardrobe with different storage functions",wardrobe,9,https://www.ikea.com/my/en/images/products/jonaxel-wardrobe-combination-white__1239862_pe919146_s5.jpg?f=xl
+18,Gaming Chair,199.99,"Comfortable gaming chair that gives your body a nice support with a synchronised seat and back tilt that precisely follows your movements during the entire match",chair,3,https://www.ikea.com/my/en/images/products/utespelare-gaming-chair-bomstad-grey__0985643_pe816715_s5.jpg?f=xl
+19,Swivel Office Chair,249.99,"Office chair with a swivel base. Comfy; lightweight and easy to move around",chair,4,https://www.ikea.com/my/en/images/products/renberget-swivel-chair-bomstad-black__1020135_pe831794_s5.jpg?f=xl
+20,Children Desk Chair,199.99,"Robust desk chair for many years since the seat depth and the height of the seat are adjustable",chair,5,https://www.ikea.com/my/en/images/products/gunrik-childrens-desk-chair-yellow__1125040_pe875357_s5.jpg?f=xl
+21,King Bed Frame,999.99,"A king size bed frame with clean design and spacious storage boxes",bed,5,https://www.ikea.com/my/en/images/products/malm-bed-frame-high-w-2-storage-boxes-white-luroey__0800857_ph163673_s5.jpg?f=xl
+22,Single Upholstered Bed Frame,499.99,"A single bed frame with upholstered headboard and storage box",bed,3,https://www.ikea.com/my/en/images/products/slattum-upholstered-bed-frame-vissle-dark-grey__1259336_pe926649_s5.jpg?f=xl
+23,Children Bed Frame with Guard Rails,399.99,"A bed that grows with your child with guard rail that protects your child",bed,3,https://www.ikea.com/my/en/images/products/slaekt-nattapa-ext-bed-frm-w-guard-rl-slat-bd-base-white__1057782_pe848975_s5.jpg?f=xl
+24,Loft Bed with Desk,799.99,"A loft bed with desk and storage is the remedy when living in small spaces or sharing rooms with siblings",bed,2,https://www.ikea.com/my/en/images/products/smastad-loft-bed-white-white-with-desk-with-3-drawers__1168333_pe891902_s5.jpg?f=xl
+25,Wodden Queen Size Bed Frame,899.99,"A sturdy bed frame with soft profile edges and high legs",bed,2,https://www.ikea.com/my/en/images/products/songesand-bed-frame-with-4-storage-boxes-brown-loenset__1151018_pe884725_s5.jpg?f=xl
