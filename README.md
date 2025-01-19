@@ -9,8 +9,8 @@
 2. Compile and run the Java server:
    ```bash
    # From the Furniture-E-Commerce-Web directory
-   javac -cp src/main/java src/main/java/Main.java
-   java -cp src/main/java Main
+   javac -cp "src:lib/json.jar" src/main/java/Main.java src/main/java/server/SimpleHttpServer.java
+   java -cp "src:lib/json.jar" main.java.Main
    ```
 
 3. Open web browser and visit:
