@@ -112,11 +112,13 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setIsAdmin(false);
-    setUserId("");
-    setUserName("");
-    setCurrentPage("home");
+    if (window.confirm("Are you sure you want to log out?")) {
+      setIsAuthenticated(false);
+      setIsAdmin(false);
+      setUserId("");
+      setUserName("");
+      setCurrentPage("home");
+    }
   };
 
   return (
