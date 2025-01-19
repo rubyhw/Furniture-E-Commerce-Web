@@ -80,7 +80,7 @@ const App = () => {
       case "cart":
         return <CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} />;
       case "orders":
-        return <OrderPage cart={cart} />;
+        return <OrderPage userId={userId} />;
       case "login":
         return (
           <LoginPage
@@ -168,7 +168,7 @@ const App = () => {
             </li>
           )}
           {!isAuthenticated ? (
-            <>
+            <React.Fragment >
               <li>
                 <a
                   href="#"
@@ -191,14 +191,14 @@ const App = () => {
                   Sign Up
                 </a>
               </li>
-            </>
+            </React.Fragment>
           ) : (
             <li>
               <span>Welcome, {userName}</span>
             </li>
           )}
           {isAdmin && (
-            <>
+            <React.Fragment >
               <li>
                 <a
                   href="#"
@@ -221,7 +221,7 @@ const App = () => {
                   Admin Orders
                 </a>
               </li>
-            </>
+            </React.Fragment>
           )}
           <li>
             <a

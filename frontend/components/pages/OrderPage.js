@@ -1,16 +1,30 @@
-window.OrderPage = (cart) => {
-    const [orders, setOrders] = React.useState([
-        {
-            id: 1,
-            date: '2025-01-14',
-            items: [
-                { id: 1, name: 'Modern Sofa', price: 999.99, quantity: 1 },
-                { id: 2, name: 'Dining Table', price: 599.99, quantity: 2 }
-            ],
-            status: 'Processing',
-            total: 2199.97
-        }
-    ]);
+window.OrderPage = (userId) => {
+    // const [orders, setOrders] = React.useState([
+    //     {
+    //         id: 1,
+    //         date: '2025-01-14',
+    //         items: [
+    //             { id: 1, name: 'Modern Sofa', price: 999.99, quantity: 1 },
+    //             { id: 2, name: 'Dining Table', price: 599.99, quantity: 2 }
+    //         ],
+    //         status: 'Processing',
+    //         total: 2199.97
+    //     }
+    // ]);
+    const [orders, setOrders] = React.useState([]);
+    React.useEffect(() => {
+        const getOrder = async () => {
+            try{
+                const data = await window.orderService.getOrderHistory(userId);
+                console.log(data);
+                setOrders(data.orderHistory);
+            } catch(err){
+                console.log(err);
+            }
+    
+        };
+        getOrder({userId});
+    }, []);
 
     return (
         <div className="order-page">
