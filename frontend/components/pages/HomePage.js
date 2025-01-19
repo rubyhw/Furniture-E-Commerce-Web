@@ -103,15 +103,15 @@ window.HomePage = ({ setCurrentPage }) => {
                         <div className="contact-details">
                             <div className="contact-item">
                                 <h3>Address</h3>
-                                <p>123 Furniture Street<br/>
-                                    Kuala Lumpur, 50450<br/>
+                                <p>13 Furniture Street<br/>
+                                    Georgetown, 11600<br/>
                                     Malaysia</p>
                             </div>
                             <div className="contact-item">
                                 <h3>Contact Information</h3>
                                 <p>Email: info@furniture.my<br/>
-                                    Phone: +60 3-1234 5678<br/>
-                                    WhatsApp: +60 12-345 6789</p>
+                                    Phone: +60 11-546 1845<br/>
+                                    WhatsApp: +60 10-323 1722</p>
                             </div>
                             <div className="contact-item">
                                 <h3>Business Hours</h3>

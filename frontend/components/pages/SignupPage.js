@@ -2,24 +2,24 @@ window.SignupPage = ({ setCurrentPage }) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [name, setName] = React.useState("");
-    const [error, setError] = React.useState("");
+    const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
 
-    const handleSignUpSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
         try {
-        await window.AuthContext.handleSignUp({
-            email,
-            password,
-            name
-        });
-        setCurrentPage("home");
+            await window.AuthContext.handleSignUp({
+                email,
+                password,
+                name
+            });
+            setCurrentPage("login");
         } catch (err) {
-        setError(err.message);
-        setLoading(false);
+            setError(err.message);
+            setLoading(false);
         }
     };
 
@@ -28,7 +28,7 @@ window.SignupPage = ({ setCurrentPage }) => {
             <div className="signup-container">
                 <h1>Create Account</h1>
                 {error && <div className="error-message">{error}</div>}
-                <form className="signup-form" onSubmit={handleSignUpSubmit}>
+                <form className="signup-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="name">Full Name</label>
                         <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
