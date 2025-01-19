@@ -7,13 +7,17 @@ import com.sun.net.httpserver.HttpServer;
 import server.SimpleHttpServer.LoginHandler;
 import server.SimpleHttpServer.SignUpHandler;
 import server.SimpleHttpServer.ProductHandler;
+import server.SimpleHttpServer.CheckoutHandler;
 import server.SimpleHttpServer.StaticFileHandler;
 import server.SimpleHttpServer.StockHandler;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.file.Files; 
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +32,7 @@ public class SimpleHttpServer {
         server.createContext("/api/signup", new SignUpHandler());
         server.createContext("/api/products", new ProductHandler());
         server.createContext("/api/stock", new StockHandler());
+        server.createContext("/api/checkout", new CheckoutHandler());
         server.createContext("/", new StaticFileHandler());
         server.setExecutor(null);
         server.start();
@@ -382,6 +387,87 @@ public class SimpleHttpServer {
                 e.printStackTrace();
                 String response = "{\"error\":\"" + e.getMessage() + "\"}";
                 exchange.getResponseHeaders().set("Content-Type", "application/json");
+                byte[] responseBytes = response.getBytes("UTF-8");
+                exchange.sendResponseHeaders(500, responseBytes.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(responseBytes);
+                }
+            }
+        }
+    }
+
+    static class CheckoutHandler implements HttpHandler{
+        @Override
+        public void handle(HttpExchange exchange) throws IOException{
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+
+            try{
+                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder requestBody = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        requestBody.append(line);
+                    }
+
+                    // Seperate json string into attributes
+                    String body = requestBody.toString().trim();
+                    System.out.println(body);
+                    body = body.substring(1, body.length()-1);
+                    System.out.println(body);
+                    String[] parts = body.split(",\"");
+                    String userId = parts[0].split(":")[1];
+                    String productIDs = parts[1].split(":")[1];
+                    String total = parts[2].split(":")[1];
+                    productIDs = productIDs.substring(1, productIDs.length()-1);
+                    String[] productId = productIDs.split(",");
+                    userId = userId.substring(1, userId.length()-1);
+
+                    // Find the quantity of repeated products
+                    Map<String, Integer> frequency = new HashMap<>();
+                    for (String str : productId) {
+                        // getOrDefault returns the current count or 0 if the string isn't in the map
+                        frequency.put(str, frequency.getOrDefault(str, 0) + 1);
+                    }
+
+                    // Read all of orders.csv to find next order ID
+                    String currentDir = System.getProperty("user.dir");
+                    String csvPath = currentDir + "/data/orders.csv";
+                    File csvFile = new File(csvPath);
+                    if (!csvFile.exists() || !csvFile.canRead()) {
+                        throw new IOException("Cannot access CSV file at: " + csvPath);
+                    }
+                    List<String> orders = Files.readAllLines(csvFile.toPath());
+
+                    FileWriter fw = new FileWriter(csvFile, true);
+                    LocalDate orderDate = LocalDate.now();
+                    String status = "Processing";
+                    // Insert into orders.csv: orderId, userId, date, total, status, productId*, corresponding quantity*
+                    // *productId & corresponding quantity is repeated as many times as needed
+                    String newRecord = Integer.toString(orders.size()+1) + "," + userId + "," + orderDate + "," + total + "," + status + ",";
+                    for(String id : frequency.keySet()){
+                        newRecord = newRecord + id + "," + frequency.get(id) + ","; 
+                    }
+                    newRecord = newRecord.substring(0, newRecord.length() - 1);
+                    newRecord = newRecord + "\n";
+                    System.out.println(newRecord);
+                    fw.append(newRecord);
+                    fw.close();
+                    exchange.sendResponseHeaders(204, -1);
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+                String response = "{\"error\":\"" + e.getMessage() + "\"}";
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
+                exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
                 byte[] responseBytes = response.getBytes("UTF-8");
                 exchange.sendResponseHeaders(500, responseBytes.length);
                 try (OutputStream os = exchange.getResponseBody()) {

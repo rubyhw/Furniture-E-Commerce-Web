@@ -1,4 +1,4 @@
-window.OrderPage = () => {
+window.OrderPage = (cart) => {
     const [orders, setOrders] = React.useState([
         {
             id: 1,

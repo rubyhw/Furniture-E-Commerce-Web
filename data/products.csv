@@ -2,8 +2,8 @@ id,name,price,description,category,stock_count,image_url
 1,Modern Sofa,999.99,A sleek and comfortable modern sofa,others,7,https://images.unsplash.com/photo-1555041469-a586c61ea9bc
 2,Dining Table,599.99,Elegant dining table for 6,table,7,https://images.unsplash.com/photo-1577140917170-285929fb55b7
 3,Queen Bed Frame,799.99,Queen size bed frame with storage,bed,15,https://images.unsplash.com/photo-1505693416388-ac5ce068fe85
-5,Coffee Table,199.99,Modern coffee table with storage shelf,table,4,https://images.unsplash.com/photo-1533090368676-1fd25485db88
+5,Coffee Table,199.99,Modern coffee table with storage shelf,table,8,https://images.unsplash.com/photo-1533090368676-1fd25485db88
 6,Wooden Wardrobe,899.99,Spacious wardrobe with classic design,wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2
-7,Dining Chair Set,399.99,Set of 4 elegant dining chairs,chair,4,https://images.unsplash.com/photo-1503602642458-232111445657
+7,Dining Chair Set,399.99,Set of 4 elegant dining chairs,chair,3,https://images.unsplash.com/photo-1503602642458-232111445657
 8,Study Table,249.99,Compact study table with drawers,table,10,https://images.unsplash.com/photo-1554295405-abb8fd54f153
 10,Storage Wardrobe,699.99,Modern wardrobe with sliding doors,wardrobe,4,https://images.unsplash.com/photo-1595428774223-ef52624120d2

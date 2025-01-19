@@ -78,9 +78,9 @@ const App = () => {
           />
         );
       case "cart":
-        return <CartPage cart={cart} />;
+        return <CartPage cart={cart} userId={userId} setCurrentPage={setCurrentPage} />;
       case "orders":
-        return <OrderPage />;
+        return <OrderPage cart={cart} />;
       case "login":
         return (
           <LoginPage
