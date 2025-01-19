@@ -1,16 +1,22 @@
-window.LoginPage = ({ setCurrentPage, setIsAuthenticated, setIsAdmin, setUserId, setUserName }) => {
+window.LoginPage = ({
+  setCurrentPage,
+  setIsAuthenticated,
+  setIsAdmin,
+  setUserId,
+  setUserName,
+}) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-        await window.AuthContext.handleLogin({
+      await window.AuthContext.handleLogin({
         email,
         password,
         setIsAuthenticated,
@@ -20,7 +26,7 @@ window.LoginPage = ({ setCurrentPage, setIsAuthenticated, setIsAdmin, setUserId,
       });
       setCurrentPage("home");
     } catch (err) {
-        console.log(err);
+      console.log(err);
       setError("Invalid email or password");
       setLoading(false);
     }
@@ -31,7 +37,7 @@ window.LoginPage = ({ setCurrentPage, setIsAuthenticated, setIsAdmin, setUserId,
       <div className="login-container">
         <h1>Login</h1>
         {error && <div className="error-message">{error}</div>}
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleLoginSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input

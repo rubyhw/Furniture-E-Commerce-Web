@@ -1,5 +1,12 @@
 const AuthContext = {
-  async handleLogin({ email, password, setIsAuthenticated, setIsAdmin, setUserId, setUserName }) {
+  async handleLogin({
+    email,
+    password,
+    setIsAuthenticated,
+    setIsAdmin,
+    setUserId,
+    setUserName,
+  }) {
     try {
       console.log("submitting form");
       console.log(JSON.stringify({ email, password }));
@@ -24,10 +31,35 @@ const AuthContext = {
         throw new Error("Invalid User Credentials");
       }
     } catch (err) {
-      setError("Failed to login. Please check your credentials.");
       throw err;
     }
   },
+
+  async handleSignUp({
+    email,
+    password,
+    name
+  }) {
+    try {
+      console.log("submitting form");
+      console.log(JSON.stringify({ email, password, name }));
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        console.log(data.error);
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
 };
 
 window.AuthContext = AuthContext;
